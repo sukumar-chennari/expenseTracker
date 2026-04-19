@@ -1,16 +1,16 @@
 ## Demo
 
-### Home Screen
-![Home](screenshots/home.png)
+## Demo
 
-### Add Expense
-![Add](screenshots/add.png)
+<p align="center">
+  <img src="screenshots/home.png" width="250"/>
+  <img src="screenshots/add.png" width="250"/>
+</p>
 
-### Expense List
-![List](screenshots/list.png)
-
-### Theme
-![Theme](screenshots/theme.png)
+<p align="center">
+  <img src="screenshots/list.png" width="250"/>
+  <img src="screenshots/theme.png" width="250"/>
+</p>
 
 # Expense Tracker
 

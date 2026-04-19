@@ -5,11 +5,15 @@ import {
   IonTitle,
   IonContent,
   IonButton,
-  IonIcon
+  IonIcon,
+  IonBadge
 } from '@ionic/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
-  ellipsisHorizontal
+  ellipsisHorizontal,
+  sunnyOutline,
+  moonOutline,
+  cloudyNightOutline
 } from 'ionicons/icons';
 import './Home.css';
 import ExpenseForm from '../components/ExpenseForm';
@@ -25,6 +29,26 @@ interface Expense {
 
 const Home: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+
+  // 1. Thoughtful Touch: Dynamic Greeting
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return { text: 'Good Morning', icon: sunnyOutline };
+    if (hour < 18) return { text: 'Good Afternoon', icon: sunnyOutline };
+    return { text: 'Good Evening', icon: moonOutline };
+  }, []);
+
+  // 2. Thoughtful Touch: Category Summary
+  const topCategory = useMemo(() => {
+    if (expenses.length === 0) return null;
+    const totals = expenses.reduce((acc, curr) => {
+      acc[curr.category] = (acc[curr.category] || 0) + curr.amount;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const top = Object.entries(totals).reduce((a, b) => a[1] > b[1] ? a : b);
+    return { name: top[0], amount: top[1] };
+  }, [expenses]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -65,7 +89,12 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader className="ion-no-border">
         <IonToolbar>
-          <IonTitle>My Finances</IonTitle>
+          <IonTitle>
+            <div className="title-wrapper">
+              <IonIcon icon={greeting.icon} className="greeting-icon" />
+              <span>{greeting.text}</span>
+            </div>
+          </IonTitle>
           <IonButton slot="end" fill="clear" color="dark">
             <IonIcon icon={ellipsisHorizontal} />
           </IonButton>
@@ -76,8 +105,16 @@ const Home: React.FC = () => {
         <div className="home-container">
 
           <div className="header-section">
-            <h1>Total Expenses</h1>
-            <p className="total-balance">{formatCurrency(totalExpenses)}</p>
+            <p className="section-label">Total Expenses</p>
+            <h1 className="total-balance">{formatCurrency(totalExpenses)}</h1>
+            
+            {topCategory && (
+              <div className="cateogry-insight animate-fade-in">
+                <IonBadge color="primary" className="insight-badge">
+                  Most spent on: {topCategory.name}
+                </IonBadge>
+              </div>
+            )}
           </div>
 
           <ExpenseForm onAdd={addExpense} />

@@ -1,3 +1,17 @@
+## Demo
+
+### Home Screen
+![Home](screenshots/home.png)
+
+### Add Expense
+![Add](screenshots/add.png)
+
+### Expense List
+![List](screenshots/list.png)
+
+### Theme
+![Theme](screenshots/theme.png)
+
 # Expense Tracker
 
 A simple, mobile-first expense tracking app built using React and Ionic.

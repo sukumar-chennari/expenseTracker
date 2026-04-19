@@ -14,6 +14,37 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
+/* Dark Mode Overrides */
+body.dark {
+  --app-bg: #0f172a;
+  --card-bg: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+}
+
+body.dark .custom-input {
+  --background: #334155;
+  color: #f1f5f9;
+}
+
+body.dark .icon-box {
+  background: #334155;
+}
+
+body.dark .empty-icon-wrapper {
+  background: #334155;
+}
+
+body.dark ion-toolbar {
+  --background: #0f172a;
+  --color: #f1f5f9;
+}
+
+body.dark ion-content {
+  --background: #0f172a;
+}
+
 .home-container {
   font-family: 'Inter', sans-serif;
   max-width: 600px;

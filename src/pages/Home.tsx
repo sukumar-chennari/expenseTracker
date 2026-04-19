@@ -6,14 +6,18 @@ import {
   IonContent,
   IonButton,
   IonIcon,
-  IonBadge
+  IonBadge,
+  IonActionSheet,
+  IonToast
 } from '@ionic/react';
 import { useState, useEffect, useMemo } from 'react';
 import {
   ellipsisHorizontal,
   sunnyOutline,
   moonOutline,
-  cloudyNightOutline
+  trashOutline,
+  colorPaletteOutline,
+  eyeOutline
 } from 'ionicons/icons';
 import './Home.css';
 import ExpenseForm from '../components/ExpenseForm';
@@ -29,8 +33,21 @@ interface Expense {
 
 const Home: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [showMenu, setShowMenu] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMsg, setToastMsg] = useState('');
+  
+  // Dark Mode State
+  const [isDark, setIsDark] = useState(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
 
-  // 1. Thoughtful Touch: Dynamic Greeting
+  useEffect(() => {
+    document.body.classList.toggle('dark', isDark);
+    localStorage.setItem('darkMode', isDark.toString());
+  }, [isDark]);
+
+  // Thoughtful Touch: Dynamic Greeting
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
     if (hour < 12) return { text: 'Good Morning', icon: sunnyOutline };
@@ -38,7 +55,7 @@ const Home: React.FC = () => {
     return { text: 'Good Evening', icon: moonOutline };
   }, []);
 
-  // 2. Thoughtful Touch: Category Summary
+  // Thoughtful Touch: Category Summary
   const topCategory = useMemo(() => {
     if (expenses.length === 0) return null;
     const totals = expenses.reduce((acc, curr) => {
@@ -85,6 +102,17 @@ const Home: React.FC = () => {
     setExpenses(expenses.filter(exp => exp.id !== id));
   };
 
+  const handleViewAll = () => {
+    setToastMsg(`Currently viewing all ${expenses.length} transactions.`);
+    setShowToast(true);
+  };
+
+  const clearAll = () => {
+    setExpenses([]);
+    setToastMsg('All transactions cleared.');
+    setShowToast(true);
+  };
+
   return (
     <IonPage>
       <IonHeader className="ion-no-border">
@@ -95,7 +123,11 @@ const Home: React.FC = () => {
               <span>{greeting.text}</span>
             </div>
           </IonTitle>
-          <IonButton slot="end" fill="clear" color="dark">
+          <IonButton 
+            slot="end" 
+            fill="clear" 
+            onClick={() => setShowMenu(true)}
+          >
             <IonIcon icon={ellipsisHorizontal} />
           </IonButton>
         </IonToolbar>
@@ -109,7 +141,7 @@ const Home: React.FC = () => {
             <h1 className="total-balance">{formatCurrency(totalExpenses)}</h1>
             
             {topCategory && (
-              <div className="cateogry-insight animate-fade-in">
+              <div className="category-insight animate-fade-in">
                 <IonBadge color="primary" className="insight-badge">
                   Most spent on: {topCategory.name}
                 </IonBadge>
@@ -118,12 +150,59 @@ const Home: React.FC = () => {
           </div>
 
           <ExpenseForm onAdd={addExpense} />
-          <ExpenseList expenses={expenses} onDelete={deleteExpense} />
+          
+          <div className="list-section">
+            <div className="list-header">
+              <h2>Recent History</h2>
+              <IonButton 
+                fill="clear" 
+                size="small" 
+                color="primary"
+                onClick={handleViewAll}
+              >
+                View All
+              </IonButton>
+            </div>
+            <ExpenseList expenses={expenses} onDelete={deleteExpense} />
+          </div>
 
         </div>
+
+        <IonActionSheet
+          isOpen={showMenu}
+          onDidDismiss={() => setShowMenu(false)}
+          header="Options"
+          buttons={[
+            {
+              text: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+              icon: isDark ? sunnyOutline : moonOutline,
+              handler: () => setIsDark(!isDark)
+            },
+            {
+              text: 'Clear All History',
+              role: 'destructive',
+              icon: trashOutline,
+              handler: clearAll
+            },
+            {
+              text: 'Cancel',
+              role: 'cancel'
+            }
+          ]}
+        />
+
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={toastMsg}
+          duration={2000}
+          position="bottom"
+          color="dark"
+        />
       </IonContent>
     </IonPage>
   );
 };
+
 
 export default Home;

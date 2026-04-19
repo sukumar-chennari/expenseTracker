@@ -73,12 +73,7 @@ const ExpenseList: React.FC<Props> = ({ expenses, onDelete }) => {
     }
 
     return (
-        <div className="list-section">
-            <div className="list-header">
-                <h2>Recent History</h2>
-                <IonButton fill="clear" size="small" color="primary">View All</IonButton>
-            </div>
-
+        <>
             <IonList lines="none" style={{ background: 'transparent' }}>
                 {expenses.map((expense) => (
                     <IonItem key={expense.id} className="expense-item">
@@ -126,7 +121,7 @@ const ExpenseList: React.FC<Props> = ({ expenses, onDelete }) => {
                     }
                 ]}
             />
-        </div>
+        </>
     );
 };
 

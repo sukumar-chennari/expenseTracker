@@ -118,9 +118,8 @@ const Home: React.FC = () => {
       <IonHeader className="ion-no-border">
         <IonToolbar>
           <IonTitle>
-            <div className="title-wrapper">
-              <IonIcon icon={greeting.icon} className="greeting-icon" />
-              <span>{greeting.text}</span>
+            <div className="brand-wrapper">
+              <span>Expense Tracker</span>
             </div>
           </IonTitle>
           <IonButton 
@@ -137,14 +136,27 @@ const Home: React.FC = () => {
         <div className="home-container">
 
           <div className="header-section">
-            <p className="section-label">Total Expenses</p>
-            <h1 className="total-balance">{formatCurrency(totalExpenses)}</h1>
-            
-            {topCategory && (
-              <div className="category-insight animate-fade-in">
-                <IonBadge color="primary" className="insight-badge">
-                  Most spent on: {topCategory.name}
-                </IonBadge>
+            {expenses.length === 0 ? (
+              <div className="welcome-hero animate-fade-in">
+                <div className="greeting-pill">
+                  <IonIcon icon={greeting.icon} />
+                  <span>{greeting.text}</span>
+                </div>
+                <h1>Track your spending <br/>with ease.</h1>
+                <p className="hero-subtitle">Smart way to manage your daily expenses and save more for your future.</p>
+              </div>
+            ) : (
+              <div className="active-dashboard animate-fade-in">
+                <p className="section-label">Total Expenses</p>
+                <h1 className="total-balance">{formatCurrency(totalExpenses)}</h1>
+                
+                {topCategory && (
+                  <div className="category-insight">
+                    <IonBadge color="primary" className="insight-badge">
+                      Most spent on: {topCategory.name}
+                    </IonBadge>
+                  </div>
+                )}
               </div>
             )}
           </div>
